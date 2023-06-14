@@ -1,13 +1,18 @@
 package snackegame;
 
-
-
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JOptionPane;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Dimension;
+import java.awt.RenderingHints;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class GameSnake extends JFrame {
+
     final String TITLE_OF_PROGRAM = "Classic Game Snake";
     final String GAME_OVER_MSG = "GAME OVER";
     final static int CELL_SIZE = 20;           // size of cell in pix
@@ -26,70 +31,69 @@ public class GameSnake extends JFrame {
     final int SNAKE_DELAY = 150;               // snake delay in milliseconds
     int snakeSize = 0;                         // current snake size
     static boolean gameOver = false;           // a sign game is over or not
+
     Canvas canvas;                   // canvas object for rendering (drawing)
     Snake snake;                     // declare a snake object
     Food food;                       // declare a food object
     Poison poison;                   // declare a poison object
-    
 
-    public static void main(String[] args) {
-        new GameSnake().game();
+    public static void main(String[] args) {    // starting method
+        new GameSnake().game();                 // create an object and call game()
     }
 
-    public GameSnake(){
+    public GameSnake() {
         setTitle(TITLE_OF_PROGRAM);
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+
         canvas = new Canvas();
-        canvas.setBackground(Color.WHITE);
-        canvas.setPreferredSize(new Dimension(CELL_SIZE * CANVAS_WIDTH,
-                CELL_SIZE * CANVAS_HEIGHT));
+        canvas.setBackground(Color.white);
+        canvas.setPreferredSize(new Dimension(
+                CELL_SIZE * CANVAS_WIDTH - 10,
+                CELL_SIZE * CANVAS_HEIGHT - 10));
+
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                super.keyPressed(e);
                 snake.setDirection(e.getKeyCode());
             }
         });
-
-        add(canvas);
-        pack();
-        setLocationRelativeTo(null);
-        setResizable(false);
-        setVisible(true);
+        add(canvas);                 // add a panel for rendering
+        pack();                      // bringing the window to the required size
+        setLocationRelativeTo(null); // the window will be in the center
+        setResizable(false);         // prohibit window resizing
+        setVisible(true);            // make the window visible
     }
 
-    private void game() {
-        snake = new Snake(
+    private void game() {            // method containing game cycle
+        snake = new Snake(           // creating snake object
                 START_SNAKE_X,
                 START_SNAKE_Y,
                 START_SNAKE_SIZE,
                 KEY_RIGHT);
-        food = new Food(snake);
+
+        food = new Food(snake);      // creating food object
         snake.setFood(food);
 
-        poison = new Poison(snake);
+        poison = new Poison(snake);  // poison object
+        poison.setFood(food);
+
         snake.setPoison(poison);
+        food.setPoison(poison);
 
-
-        while(!gameOver){
-            snake.move();
-            if(snake.size() > snakeSize){
+        while (!gameOver) {          // game cycle while NOT gameOver
+            snake.move();            // snake move
+            if (snake.size() > snakeSize) {
                 snakeSize = snake.size();
-                setTitle(TITLE_OF_PROGRAM + ":" + snakeSize);
+                setTitle(TITLE_OF_PROGRAM + " : " + snakeSize);
             }
-
-            if(food.isEaten()){
-                food.appear();
+            if (food.isEaten()) {    // if the snake ate the food
+                food.appear();       //   show food in new place
+                poison.add();        //   add new poison point
             }
-
-            if(poison.isEaten()){
-                poison.appear();
-
-            }
-
-            canvas.repaint();
-            sleep(SNAKE_DELAY);
+            canvas.repaint();        // repaint panel/window
+            sleep(SNAKE_DELAY);      // to make delay in milliseconds
         }
+        JOptionPane.showMessageDialog(this, GAME_OVER_MSG);
     }
 
     private void sleep(long ms) {    // method for suspending
@@ -112,5 +116,4 @@ public class GameSnake extends JFrame {
             poison.paint(g2D);
         }
     }
-
 }

@@ -1,45 +1,30 @@
 package snackegame;
 
-import java.awt.*;
+import java.awt.Graphics2D;
+import java.awt.Color;
 
 public class Cell {
-    private int x, y;
-    private int size;
-    private Color color;
+    private int x, y;                       // object coordinates
+    private int size;                       // object size in px
+    private Color color;                    // object color
 
-    public Cell(int x, int y, int size, Color color){
-        set(x, y);
-        setSize(size);
-        setColor(color);
+    public Cell(int x, int y, int size, Color color) {
+        set(x, y);                            // init coordinates
+        this.size = size;                     // init size
+        this.color = color;                   // init color
     }
 
-    public int getX() {
-        return x;
-    }
-
-    public void set(int x, int y) {
+    public void set(int x, int y) {           // set coordinates
         this.x = x;
         this.y = y;
     }
 
-    public int getY() {
+    public int getX() {                       // get the X coordinate
+        return x;
+    }
+
+    public int getY() {                       // get the Y coordinate
         return y;
-    }
-
-    public int getSize() {
-        return size;
-    }
-
-    public void setSize(int size) {
-        this.size = size;
-    }
-
-    public Color getColor() {
-        return color;
-    }
-
-    public void setColor(Color color) {
-        this.color = color;
     }
 
     public void paint(Graphics2D g) {           // object rendering
